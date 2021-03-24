@@ -1,11 +1,10 @@
 nameOverride: ""
-fullnameOverride: ""
 
 replicas: 1
 
 image:
-  repository: satish/satish1
-  tag: 1.1
+  repository: 
+  tag: 
   imagePullPolicy: IfNotPresent
   imagePullSecrets: []
   securityContext: {}
