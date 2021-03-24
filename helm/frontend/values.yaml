@@ -12,7 +12,7 @@ image:
   #  runAsGroup: 999
   #  fsGroup: 999
 
-env:
+env: {}
 
 autoscaling:
   enabled: false
