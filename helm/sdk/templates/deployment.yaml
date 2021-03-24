@@ -48,7 +48,7 @@ spec:
         - java
         args:
         - -jar
-        - blotout-0.0.1.jar
+        - sdk-api-0.0.1.jar
         env:
         {{- range $conf, $value := .Values.env }}
           - name: {{ $conf | quote }}
