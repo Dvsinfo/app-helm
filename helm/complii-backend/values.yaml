@@ -1,0 +1,71 @@
+nameOverride: "complii"
+
+replicaCount: 1
+
+image:
+  repository: blotout/complii-backend
+  tag: 183-introduce-admin-account-1f7932da5910da322e1a3a10874e108fa62c5de8
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+env:
+  AWS_ACCESS_KEY_ID: ""
+  AWS_SECRET_ACCESS_KEY: ""
+  COMPLII_DB_URL: "mysql.mysql.svc.cluster.local"
+  COMPLII_DB_USER: "root"
+  COMPLII_DB_PASSWORD: ""
+  COMPLII_RUNTIME_ENVIRONMENT: ""
+  REDIS_HOST: "redis-master.redis.svc.cluster.local"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name:
+
+podSecurityContext:
+  {}
+# fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/use-regex: "true"
+    # nginx.ingress.kubernetes.io/rewrite-target: /complii/$2
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: example.com
+      paths: ["/"]
+      # paths: ["/complii(/|$)(.*)"]
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 512m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
