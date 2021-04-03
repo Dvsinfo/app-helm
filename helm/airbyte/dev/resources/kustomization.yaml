@@ -27,3 +27,9 @@ configMapGenerator:
   - name: airbyte-env
     files: 
     - airbyte-env
+generatorOptions:
+  disableNameSuffixHash: true
+  labels:
+    type: generated
+  annotations:
+    note: generated
