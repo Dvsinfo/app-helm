@@ -19,35 +19,17 @@ spec:
           image: airbyte/scheduler
           env:
             - name: AIRBYTE_VERSION
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: AIRBYTE_VERSION
+              value: 0.16.1-alpha
             - name: CONFIG_ROOT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: CONFIG_ROOT
+              value: /configs
             - name: DATABASE_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_PASSWORD
+              value: docker
             - name: DATABASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_URL
+              value: jdbc:postgresql://airbyte-db-svc:5432/airbyte
             - name: DATABASE_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_USER
+              value: docker
             - name: TRACKING_STRATEGY
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: TRACKING_STRATEGY
+              value: segment
             - name: WAIT_BEFORE_HOSTS
               value: "5"
             - name: WAIT_HOSTS

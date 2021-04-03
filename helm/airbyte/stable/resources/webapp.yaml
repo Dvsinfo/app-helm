@@ -29,29 +29,14 @@ spec:
           image: airbyte/webapp
           env:
             - name: AIRBYTE_VERSION
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: AIRBYTE_VERSION
+              value: 0.16.1-alpha
             - name: API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: API_URL
+              value: 
             - name: TRACKING_STRATEGY
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: TRACKING_STRATEGY
+              value: segment
             - name: PAPERCUPS_STORYTIME
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: PAPERCUPS_STORYTIME
+              value: enabled
             - name: IS_DEMO
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: IS_DEMO
+              value: "false"
           ports:
             - containerPort: 80
