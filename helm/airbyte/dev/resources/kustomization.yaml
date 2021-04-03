@@ -23,12 +23,7 @@ resources:
   - volume-workspace.yaml
   - webapp.yaml
 
-# configMapGenerator:
-#   - name: airbyte-env
-#     files: 
-#     - airbyte-env
-
-
 configMapGenerator:
   - name: airbyte-env
-    env: .env
+    files: 
+    - airbyte-env
