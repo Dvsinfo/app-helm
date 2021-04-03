@@ -39,20 +39,11 @@ spec:
             - name: WORKSPACE_DOCKER_MOUNT
               value: workspace
             - name: WORKSPACE_ROOT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: WORKSPACE_ROOT
+              value: /workspace
             - name: WORKER_ENVIRONMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: WORKER_ENVIRONMENT
+              value: kubernetes
             - name: LOCAL_ROOT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: LOCAL_ROOT
+              value: /local_undefined
           ports:
             - containerPort: 8001
           volumeMounts:
