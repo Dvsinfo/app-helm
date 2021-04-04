@@ -55,8 +55,8 @@ service:
 
 ingress:
   enabled: false
-  annotations:
-    kubernetes.io/ingress.class: nginx
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     # nginx.ingress.kubernetes.io/server-snippet: |
     #   if ($http_x_forwarded_proto != 'https') {
@@ -101,7 +101,7 @@ supersetNode:
     SMTP_USER:
     SMTP_PASSWORD:
     SMTP_MAIL_FROM:
-  forceReload: false
+  forceReload: false # If true, forces deployment to reload on each upgrade
   initContainers:
     - name: wait-for-postgres
       image: busybox:latest
@@ -173,7 +173,10 @@ init:
                     --lastname admin \
                     --email {{ .Values.SUPERSET_ADMIN }} \
                     --password {{ .Values.SUPERSET_PASSWORD }} || true
-
+    {{ if .Values.init.loadExamples }}
+    echo "Loading examples..."
+    superset load_examples
+    {{- end }}
 ##
 ## Configuration values for the postgresql dependency.
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
@@ -267,7 +270,7 @@ redis:
       ##
       ## Access mode:
       accessModes:
-        - ReadWriteOnce
+      - ReadWriteOnce
   ##
   ## Disable cluster management by default.
   cluster:
