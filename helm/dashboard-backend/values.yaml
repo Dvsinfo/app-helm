@@ -58,6 +58,13 @@ ingress:
     - example.com
   paths:
     - /
+# swagger ingress
+swagger:
+  enabled: false
+  annotations: {}
+  labels: {}
+  paths:
+    - /
 
 ## Labels to set container specific security contexts
 containerSecurityContext:
