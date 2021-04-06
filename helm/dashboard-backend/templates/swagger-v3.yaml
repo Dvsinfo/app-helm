@@ -8,7 +8,7 @@ apiVersion: extensions/v1beta1
 {{ end -}}
 kind: Ingress
 metadata:
-  name: {{ template "app.fullname" . }}-swagger
+  name: {{ template "app.fullname" . }}-v3
 {{- if .Values.swagger.annotations }}
   annotations:
   {{- range $key, $value := .Values.swagger.annotations }}
@@ -32,19 +32,10 @@ spec:
     - host: {{ $host }}
       http:
         paths:
-          - path: /swagger-ui(/|$)(.*)
-            backend:
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-          - path: /swagger-ui-custom.html(/|$)(.*)
-            backend:
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
           - path: /v3(/|$)(.*)
             backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
-  {{- end -}}
   {{- end -}}
   {{- end -}}
   {{- end -}}

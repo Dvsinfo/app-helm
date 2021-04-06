@@ -63,8 +63,7 @@ swagger:
   enabled: false
   annotations: {}
   labels: {}
-  paths:
-    - /
+
 
 ## Labels to set container specific security contexts
 containerSecurityContext:
