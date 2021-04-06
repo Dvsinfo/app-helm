@@ -1,7 +1,6 @@
 {{- if .Values.swagger.enabled -}}
 {{- $serviceName := include "app.fullname" . -}}
 {{- $servicePort := .Values.service.containerPort -}}
-{{- $paths := .Values.swagger.paths -}}
 {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 apiVersion: networking.k8s.io/v1beta1
 {{ else }}
@@ -33,8 +32,15 @@ spec:
     - host: {{ $host }}
       http:
         paths:
-  {{- range $p := $paths }}
-          - path: {{ $p}}
+          - path: /swagger-ui(/|$)(.*)
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+          - path: /swagger-ui-custom.html(/|$)(.*)
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+          - path: /v3(/|$)(.*)
             backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
