@@ -22,11 +22,13 @@ resources:
   - volume-db.yaml
   - volume-workspace.yaml
   - webapp.yaml
+  - ingress.yaml
 
 configMapGenerator:
   - name: airbyte-env
     files: 
     - airbyte-env
+    
 generatorOptions:
   disableNameSuffixHash: true
   labels:
