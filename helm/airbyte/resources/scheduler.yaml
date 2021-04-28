@@ -17,37 +17,10 @@ spec:
       containers:
         - name: airbyte-scheduler-container
           image: airbyte/scheduler
+          envFrom:
+            - configMapRef:
+                name: airbyte-env
           env:
-            - name: AIRBYTE_VERSION
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: AIRBYTE_VERSION
-            - name: CONFIG_ROOT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: CONFIG_ROOT
-            - name: DATABASE_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_PASSWORD
-            - name: DATABASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_URL
-            - name: DATABASE_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_USER
-            - name: TRACKING_STRATEGY
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: TRACKING_STRATEGY
             - name: WAIT_BEFORE_HOSTS
               value: "5"
             - name: WAIT_HOSTS
@@ -56,21 +29,6 @@ spec:
               value: "45"
             - name: WORKSPACE_DOCKER_MOUNT
               value: workspace
-            - name: WORKSPACE_ROOT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: WORKSPACE_ROOT
-            - name: WORKER_ENVIRONMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: WORKER_ENVIRONMENT
-            - name: LOCAL_ROOT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: LOCAL_ROOT
           ports:
             - containerPort: 8001
           volumeMounts:
