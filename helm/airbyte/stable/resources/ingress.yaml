@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: argo.blotout.io
+  - host: airbyte-stage.blotout.io
     http:
       paths:
       - path: /
@@ -28,7 +28,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /api/$2
 spec:
   rules:
-  - host: argo.blotout.io
+  - host: airbyte-stage.blotout.io
     http:
       paths:
       - path: /api(/|$)(.*)
