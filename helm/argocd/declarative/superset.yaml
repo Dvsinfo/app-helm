@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: superset-env
+  labels:
+    app: superset
+  namespace: superset
+type: Opaque
+stringData:
+  SUPERSET_ADMIN: "${SUPERSET_ADMIN}"
+  SUPERSET_PASSWORD: "${SUPERSET_PASSWORD}"
+  REDIS_HOST: "${REDIS_ENDPOINT}"
+  REDIS_PORT: "6379"
+  DB_HOST: "${POSTGRESS_ENDPOINT}"
+  DB_PORT: "5432"
+  DB_USER: "${POSTGRESS_USER}"
+  DB_PASS: "${POSTGRES_PASSWORD}"
+  DB_NAME: "superset"
+  COMPOSE_PROJECT_NAME: "superset"
+  SLACK_API_TOKEN: "${SLACK_API_TOKEN}"
+  AUTH_USER_REGISTRATION_ROLE: "Admin"
+  DEFAULT_ADMIN: "${DEFAULT_ADMIN}"
+  WEBDRIVER_BASEURL: "${SUPERSET_BASEURL}"
+  SMTP_USER: "${SMTP_USER}"
+  SMTP_PASSWORD: "${SMTP_PASSWORD}"
+  SMTP_MAIL_FROM: "${SMTP_MAIL_FROM}"
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: superset
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: superset
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: helm/superset
+    repoURL: 'https://github.com/blotoutio/charts.git'
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+      version: v3
+      releaseName: superset
+      parameters:
+        - name: image.repository
+          value: 'blotout/superset'
+        - name: image.tag
+          value: 'chart_integration-90f459c90366e355c768e06d7631536835ca4fc3'
+        - name: ingress.enabled
+          value: 'true'
+        - name: 'ingress.hosts[0]'
+          value: ${SUPERSET_HOSTNAME}
+        - name: extraEnv.GUNIOCORN_WORKERS
+          value: '${GUNIOCORN_WORKERS}'
+        - name: extraEnv.GUNIOCORN_THREADS
+          value: '${GUNIOCORN_THREADS}'
+        - name: extraEnv.GUNIOCORN_TIMEOUT
+          value: '${GUNIOCORN_TIMEOUT}'
+        - name: extraEnv.CELERY_WORKERS
+          value: '${CELERY_WORKERS}'
+        - name: extraEnv.CELERY_WORKER_CHILD
+          value: '${CELERY_WORKER_CHILD}'
+        - name: postgresql.enabled
+          value: 'false'
+        - name: redis.enabled
+          value: 'false'
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+  # Ignore differences at the specified json pointers
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas

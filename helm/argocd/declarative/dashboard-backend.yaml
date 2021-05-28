@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-configmap
+data:
+  SERVER_PORT: "8080"
+  LOGGING_FILE: "/tmp/access.log"
+  LOGGING_LEVEL_COM_BLOT: "${LOGGING_LEVEL_COM_BLOT}"
+  AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+  AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+  AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
+  AMAZON_ACCOUNT_ID: "${AMAZON_ACCOUNT_ID}"
+  ORGANIZATION_ID: "${ORGANIZATION_ID}"
+  ORGANIZATION_BUCKET: "${ORGANIZATION_BUCKET}"
+  POSTGRESS_ENDPOINT: "${POSTGRESS_ENDPOINT}"
+  POSTGRESS_PORT: "5432"
+  POSTGRESS_DATABASE_NAME: "blotout"
+  POSTGRESS_USER: "${POSTGRESS_USER}"
+  POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+  REDIS_CLUSTER_NODES: "${REDIS_ENDPOINT}:6379"
+  CRYPTOKEY: "${CRYPTOKEY}"
+  TOKEN_EXPIRY: "${TOKEN_EXPIRY}"
+  BLOTOUT_LOGIN_URL: "${BLOTOUT_LOGIN_URL}"
+  GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
+  GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
+  MS_CLIENT_SECRET: "${MS_CLIENT_SECRET}"
+  MS_CLIENT_ID: "${MS_CLIENT_ID}"
+  USERPASSWORD_EXPIRY: "${USERPASSWORD_EXPIRY}"
+  SMTP_USER: "${SMTP_USER}"
+  SMTP_PASSWORD: "${SMTP_PASSWORD}"
+  SMTP_MAIL_FROM: "${SMTP_MAIL_FROM}"
+  SUPERSET_HOSTNAME: "${SUPERSET_HOSTNAME}"
+  MELTANO_DEPLOY: "${MELTANO_DEPLOY}"
+  MELTANO_HOSTNAME: "${MELTANO_HOSTNAME}"
+  FIREHOSE_ROLE_NAME: "${FIREHOSE_ROLE_NAME}"
+  ATHENA_TIMEOUT: "100000"
+  ATHENA_DATABASE: "${ATHENA_DATABASE}"
+  ATHENA_OUTPUT_BUCKET: "s3://${ATHENA_OUTPUT_BUCKET}"
+  ATHENA_ACCESS_KEY_ID: "${ATHENA_ACCESS_KEY_ID}"
+  ATHENA_SECRET_ACCES_KEY: "${ATHENA_SECRET_ACCES_KEY}"
+  ATHENA_REGION: "${ATHENA_REGION}"
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dashboard-backend
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: helm/dashboard-backend
+    repoURL: 'https://github.com/blotoutio/charts.git'
+    targetRevision: main
+    helm:
+      parameters:
+        - name: autoscaling.enabled
+          value: 'true'
+        - name: autoscaling.maxReplicas
+          value: '1'
+        - name: autoscaling.targetCPUUtilizationPercentage
+          value: '50'
+        - name: autoscaling.targetMemoryUtilizationPercentage
+          value: '60'
+        - name: image.repository
+          value: blotout/dashboard-backend
+        - name: image.tag
+          value: 'environment_veriables-de2fc75e8edf71fde2227a1a5532950162e1a47e'
+        - name: ingress.enabled
+          value: 'true'
+        - name: 'ingress.hosts[0]'
+          value: '${BLOTOUT_LOGIN_URL}'
+        - name: 'ingress.paths[0]'
+          value: /api(/|$)(.*)
+        - name: livenessProbe.path
+          value: /api/v1/health
+        - name: nameOverride
+          value: blotout
+        - name: readinessProbe.path
+          value: /api/v1/health
+        - name: service.containerPort
+          value: '8080'
+        - name: image.imagePullSecrets[0].name
+          value: regcred
+        - name: resources.limits.cpu
+          value: 1000m
+        - name: resources.limits.memory
+          value: 4Gi
+        - name: resources.requests.cpu
+          value: 250m
+        - name: resources.requests.memory
+          value: 410Mi
+        - name: swagger.enabled
+          value: 'false'
+        - name: ingress.annotations.kubernetes.io/ingress.class
+          value: nginx
+        - name: ingress.annotations.nginx.ingress.kubernetes.io/use-regex
+          value: 'true'
+        - name: ingress.annotations.nginx.ingress.kubernetes.io/rewrite-target
+          value: /api/$2
+      valueFiles:
+        - values.yaml
+      version: v3
+      releaseName: dashboard-api
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+  # Ignore differences at the specified json pointers
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas

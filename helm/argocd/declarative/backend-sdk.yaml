@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sdk-configmap
+data:
+  SERVER_PORT: "8080"
+  #Logger
+  LOGGING_FILE: "/tmp/access.log"
+  LOGGING_LEVEL_COM_BLOT: "DEBUG"
+  #Firehose
+  AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+  AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+  AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
+  #Redis
+  REDIS_CLUSTER_NODES: "${REDIS_ENDPOINT}:6379"
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend-sdk
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: helm/backend-sdk
+    repoURL: 'https://github.com/blotoutio/charts.git'
+    targetRevision: main
+    helm:
+      parameters:
+        - name: autoscaling.enabled
+          value: 'true'
+        - name: autoscaling.maxReplicas
+          value: '1'
+        - name: autoscaling.targetCPUUtilizationPercentage
+          value: '50'
+        - name: autoscaling.targetMemoryUtilizationPercentage
+          value: '60'
+        - name: image.repository
+          value: blotout/sdk-backend
+        - name: image.tag
+          value: 'environment_variable-f7b48c938817af15f478a15dd170424adbfce754'
+        - name: ingress.enabled
+          value: 'true'
+        - name: 'ingress.hosts[0]'
+          value: '${BLOTOUT_LOGIN_URL}'
+        - name: 'ingress.paths[0]'
+          value: /sdk(/|$)(.*)
+        - name: livenessProbe.path
+          value: /sdk/v1/healthcheck
+        - name: nameOverride
+          value: blotout
+        - name: readinessProbe.path
+          value: /sdk/v1/healthcheck
+        - name: service.containerPort
+          value: '8080'
+        - name: image.imagePullSecrets[0].name
+          value: regcred
+        - name: resources.limits.cpu
+          value: 1000m
+        - name: resources.limits.memory
+          value: 4Gi
+        - name: resources.requests.cpu
+          value: 250m
+        - name: resources.requests.memory
+          value: 410Mi
+      valueFiles:
+        - values.yaml
+      version: v3
+      releaseName: backend-sdk
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+  # Ignore differences at the specified json pointers
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas

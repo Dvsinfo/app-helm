@@ -1,0 +1,164 @@
+argo-cd:
+  nameOverride: argocd
+  fullnameOverride: "argocd"
+
+  installCRDs: false
+
+  global:
+    image:
+      repository: argoproj/argocd
+      tag: v1.8.4
+      imagePullPolicy: IfNotPresent
+
+  dex:
+    enabled: false
+
+  ## Server
+  server:
+    name: server
+
+    replicas: 1
+
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+      
+    extraArgs:
+      - --redis
+      - redis-master.redis.svc.cluster.local:6379
+      - --redisdb
+      - '10'
+      - --rootpath
+      - /resource-manager
+      - --insecure
+
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+
+    ## ArgoCD config
+    ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+    configEnabled: true
+    config:
+      repositories: |
+        - type: git
+          url: https://github.com/blotoutio/charts.git
+        - type: helm
+          name: argo-cd
+          url: https://argoproj.github.io/argo-helm
+        - type: helm
+          name: bitnami
+          url: https://charts.bitnami.com/bitnami
+      # # Argo CD's externally facing base URL (optional). Required when configuring SSO
+      url: https://example.com
+      # oidc.config: |
+      #   name: AzureAD
+      #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
+      #   clientID: CLIENT_ID
+      #   clientSecret: $oidc.azuread.clientSecret
+      #   requestedIDTokenClaims:
+      #     groups:
+      #       essential: true
+      #   requestedScopes:
+      #     - openid
+      #     - profile
+      #     - email
+    ingress:
+      enabled: false
+      annotations: {}
+      labels: {}
+      hosts:
+        - example.com
+      paths:
+        - /resource-manager
+
+  # config:
+  #   secret:
+  #     # createSecret: false
+  #     argocdServerAdminPassword: $2a$04$jAuGz7rs7sUMHxgoz.JxPuchT3ySeRMHAA4e35Vm.pU3Oq9WrNxLi
+
+  ## Controller
+  controller:
+    name: application-controller
+
+    # replicas: 2
+
+    ## Aargo controller commandline flgs
+    args:
+      statusProcessors: "20"
+      operationProcessors: "10"
+      appResyncPeriod: "180"
+      selfHealTimeout: "5"
+
+    ## Argo controller log format: text|json
+    logFormat: text
+    ## Argo controller log level
+    logLevel: info
+
+    ## Additional command line arguments to pass to argocd-controller
+    ##
+    extraArgs:
+      - --redis
+      - redis-master.redis.svc.cluster.local:6379
+      - --redisdb
+      - '10'
+
+    # env:
+    #   - name: "ARGOCD_CONTROLLER_REPLICAS"
+    #     value: "2"
+
+    resources:
+      limits:
+        cpu: 300m
+        memory: 512Mi
+      requests:
+        cpu: 50m
+        memory: 100Mi
+
+  ## Repo Server
+  repoServer:
+    name: repo-server
+
+    replicas: 1
+
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 2
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+
+    ## Additional command line arguments to pass to argocd-repo-server
+    ##
+    extraArgs:
+      - --redis
+      - redis-master.redis.svc.cluster.local:6379
+      - --redisdb
+      - '10'
+
+    ## Environment variables to pass to argocd-repo-server
+    ##
+    env: []
+
+    ## Argo repoServer log format: text|json
+    logFormat: text
+    ## Argo repoServer log level
+    logLevel: info
+
+    resources:
+      limits:
+        cpu: 50m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 64Mi
+
+  redis:
+    enabled: false

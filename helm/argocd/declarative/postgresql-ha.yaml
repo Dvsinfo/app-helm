@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql-ha
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: 'postgres'
+    server: 'https://kubernetes.default.svc'
+  source:
+    repoURL: 'https://charts.bitnami.com/bitnami'
+    targetRevision: 6.8.1
+    chart: postgresql-ha
+    helm:
+      valueFiles:
+        - values.yaml
+      version: v3
+      releaseName: db
+      parameters:
+        - name: metrics.enabled
+          value: 'true'
+        - name: metrics.serviceMonitor.enabled
+          value: 'true'
+        - name: persistence.size
+          value: 10Gi
+        - name: pgpool.useLoadBalancing
+          value: 'false'
+        - name: persistence.enabled
+          value: 'true'
+        - name: pgpool.childMaxConnections
+          value: '50'
+        - name: pgpool.replicaCount
+          value: '2'
+        - name: postgresql.replicaCount
+          value: '2'
+        - name: postgresql.username
+          value: postgres
+        - name: postgresql.postgresPassword
+          value: postgresPWD
+        - name: postgresql.maxConnections
+          value: '150'
+        - name: pgpool.numInitChildren
+          value: '50'
+        - name: pgpool.maxPool
+          value: '3'
+        - name: global.storageClass
+          value: myStorageClass
+        - name: global.postgresql.username
+          value: postgres
+        - name: global.postgresql.password
+          value: postgresPWD
+        - name: global.postgresql.database
+          value: blotout
+        - name: global.postgresql.repmgrUsername
+          value: repmgr
+        - name: global.postgresql.repmgrPassword
+          value: repmgrPWD
+        - name: global.postgresql.repmgrDatabase
+          value: repmgr
+        - name: global.pgpool.adminUsername
+          value: pgpool
+        - name: global.pgpool.adminUsername
+          value: pgpoolPWD
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true

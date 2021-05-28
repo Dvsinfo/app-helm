@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: complii-frontend
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: complii
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: helm/complii-frontend
+    repoURL: 'https://github.com/blotoutio/charts.git'
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+      version: v3
+      releaseName: complii-ui
+      parameters:
+        - name: autoscaling.enabled
+          value: 'true'
+        - name: autoscaling.minReplicas
+          value: '1'
+        - name: autoscaling.maxReplicas
+          value: '1'
+        - name: autoscaling.targetCPUUtilizationPercentage
+          value: '30'
+        - name: autoscaling.targetMemoryUtilizationPercentage
+          value: '40'
+        - name: image.repository
+          value: blotout/complii-frontend
+        - name: image.tag
+          value: gh-fix-188ae9dc5c8ac2273b97116b68292e948b20f34f
+        - name: ingress.enabled
+          value: 'true'
+        - name: 'ingress.hosts[0]'
+          value: '${BLOTOUT_LOGIN_URL}'
+        - name: ingress.paths[0]
+          value: /complii
+        - name: livenessProbe.path
+          value: /complii
+        - name: nameOverride
+          value: complii
+        - name: readinessProbe.path
+          value: /complii
+        - name: service.containerPort
+          value: '80'
+        - name: image.imagePullSecrets[0].name
+          value: regcred
+        - name: resources.limits.cpu
+          value: 30m
+        - name: resources.limits.memory
+          value: 60Mi
+        - name: resources.requests.cpu
+          value: 10m
+        - name: resources.requests.memory
+          value: 15Mi
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+  # Ignore differences at the specified json pointers
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas

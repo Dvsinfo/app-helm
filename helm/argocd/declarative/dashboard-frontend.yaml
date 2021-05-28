@@ -1,0 +1,79 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dashboard-frontend
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: helm/dashboard-frontend
+    repoURL: 'https://github.com/blotoutio/charts.git'
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+      version: v3
+      releaseName: dashboard-ui
+      parameters:
+        - name: autoscaling.enabled
+          value: 'true'
+        - name: autoscaling.minReplicas
+          value: '1'
+        - name: autoscaling.maxReplicas
+          value: '1'
+        - name: autoscaling.targetCPUUtilizationPercentage
+          value: '30'
+        - name: autoscaling.targetMemoryUtilizationPercentage
+          value: '40'
+        - name: env.API_BASE_URL
+          value: https://${BLOTOUT_LOGIN_URL}
+        - name: env.MELTANO_BASE_URL
+          value: https://${MELTANO_HOSTNAME}
+        - name: env.SUPERSET_BASE_URL
+          value: https://${SUPERSET_HOSTNAME}
+        - name: image.repository
+          value: blotout/dashboard-ui
+        - name: image.tag
+          value: charts-46d77821e0c11716611c29fa82adcd0c16a41acf
+        - name: ingress.enabled
+          value: 'true'
+        - name: 'ingress.hosts[0]'
+          value: '${BLOTOUT_LOGIN_URL}'
+        - name: ingress.paths[0]
+          value: /
+        - name: livenessProbe.path
+          value: /
+        - name: nameOverride
+          value: blotout
+        - name: readinessProbe.path
+          value: /
+        - name: service.containerPort
+          value: '80'
+        - name: image.imagePullSecrets[0].name
+          value: regcred
+        - name: resources.limits.cpu
+          value: 30m
+        - name: resources.limits.memory
+          value: 60Mi
+        - name: resources.requests.cpu
+          value: 10m
+        - name: resources.requests.memory
+          value: 15Mi
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+  # Ignore differences at the specified json pointers
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas

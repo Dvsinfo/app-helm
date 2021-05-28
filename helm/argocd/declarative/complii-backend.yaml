@@ -1,0 +1,82 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: complii-backend
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: complii
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: helm/complii-backend
+    repoURL: 'https://github.com/blotoutio/charts.git'
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+      version: v3
+      releaseName: complii-api
+      parameters:
+        - name: env.AWS_ACCESS_KEY_ID
+          value: '${AWS_ACCESS_KEY_ID}'
+        - name: env.AWS_SECRET_ACCESS_KEY
+          value: '${AWS_SECRET_ACCESS_KEY}'
+        - name: env.COMPLII_DB_PASSWORD
+          value: '${COMPLII_DB_PASSWORD}'
+        - name: env.COMPLII_DB_URL
+          value: '${COMPLII_DB_URL}'
+        - name: env.COMPLII_DB_USER
+          value: '${COMPLII_DB_USER}'
+        - name: env.COMPLII_RUNTIME_ENVIRONMENT
+          value: '${COMPLII_RUNTIME_ENVIRONMENT}'
+        - name: env.REDIS_HOST
+          value: '${REDIS_HOST}'
+        - name: ingress.enabled
+          value: 'true'
+        - name: 'ingress.hosts[0].host'
+          value: '${BLOTOUT_LOGIN_URL}'
+        - name: 'ingress.hosts[0].paths[0]'
+          value: /complii/api(/|$)(.*)
+        - name: replicaCount
+          value: '1'
+        - name: resources.limits.cpu
+          value: 512m
+        - name: resources.limits.memory
+          value: 512Mi
+        - name: resources.requests.cpu
+          value: 100m
+        - name: resources.requests.memory
+          value: 128Mi
+        - name: service.port
+          value: '8080'
+        - name: service.type
+          value: ClusterIP
+        - name: imagePullSecrets[0].name
+          value: regcred
+        - name: serviceAccount.create
+          value: "true"
+        - name: image.tag
+          value: >-
+            187-expose-complii-endpoint-33820611bb2bd51889df183684b959c643747f2c
+        - name: image.repository
+          value: blotout/complii-backend
+        - name: image.pullPolicy
+          value: IfNotPresent
+        - name: nameOverride
+          value: complii
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+  # Ignore differences at the specified json pointers
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas
