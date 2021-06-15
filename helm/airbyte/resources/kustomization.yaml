@@ -11,6 +11,7 @@ resources:
   - volume-workspace.yaml
   - webapp.yaml
   - ingress.yaml
+  - temporal.yaml
 
 images:
   - name: airbyte/seed
