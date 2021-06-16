@@ -11,6 +11,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "360000"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "360000"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "360000"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "360000"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-timeout: "360000"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "360000"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "360000"
 spec:
   rules:
   - host: airbyte-stage.blotout.io
