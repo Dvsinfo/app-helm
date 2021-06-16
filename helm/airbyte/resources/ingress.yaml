@@ -8,6 +8,9 @@ metadata:
     # nginx.ingress.kubernetes.io/auth-secret: basic-auth
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "360000"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "360000"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "360000"
 spec:
   rules:
   - host: airbyte-stage.blotout.io
@@ -26,9 +29,9 @@ spec:
 #     kubernetes.io/ingress.class: "nginx"
 #     # nginx.ingress.kubernetes.io/auth-type: basic
 #     # nginx.ingress.kubernetes.io/auth-secret: basic-auth
-#     nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
-#     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-#     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+#     nginx.ingress.kubernetes.io/proxy-connect-timeout: "360000"
+#     nginx.ingress.kubernetes.io/proxy-send-timeout: "360000"
+#     nginx.ingress.kubernetes.io/proxy-read-timeout: "360000"
 #     nginx.ingress.kubernetes.io/use-regex: "true"
 #     nginx.ingress.kubernetes.io/rewrite-target: /api/$2
 # spec:
