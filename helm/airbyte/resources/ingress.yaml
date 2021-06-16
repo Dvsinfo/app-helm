@@ -38,5 +38,5 @@ spec:
       paths:
       - path: /api(/|$)(.*)
         backend:
-          serviceName: airbyte-server-svc
-          servicePort: 8001
+          serviceName: airbyte-webapp-svc
+          servicePort: 80
