@@ -15,15 +15,17 @@ resources:
 
 images:
   - name: airbyte/seed
-    newTag: dev
+    newTag: 0.25.0-alpha
   - name: airbyte/db
-    newTag: dev
+    newTag: 0.25.0-alpha
   - name: airbyte/scheduler
-    newTag: dev
+    newTag: 0.25.0-alpha
   - name: airbyte/server
-    newTag: dev
+    newTag: 0.25.0-alpha
   - name: airbyte/webapp
-    newTag: dev
+    newTag: 0.25.0-alpha
+  - name: temporalio/auto-setup
+    newTag: 1.7.0
 
 # configMapGenerator:
 #   - name: airbyte-env
