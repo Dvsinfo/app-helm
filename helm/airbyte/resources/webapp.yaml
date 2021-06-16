@@ -27,9 +27,36 @@ spec:
       containers:
         - name: airbyte-webapp-container
           image: airbyte/webapp
-          envFrom:
-            - configMapRef:
-                name: airbyte-env
           env:
+            - name: AIRBYTE_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: AIRBYTE_VERSION
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: API_URL
+            - name: TRACKING_STRATEGY
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: TRACKING_STRATEGY
+            - name: PAPERCUPS_STORYTIME
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: PAPERCUPS_STORYTIME
+            - name: IS_DEMO
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: IS_DEMO
+            - name: INTERNAL_API_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: INTERNAL_API_HOST
           ports:
             - containerPort: 80
