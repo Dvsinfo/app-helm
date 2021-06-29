@@ -22,8 +22,8 @@ images:
     newTag: 0.26.4-alpha
   - name: airbyte/server
     newTag: 0.26.4-alpha
-  - name: blotout/test-123
-    newTag: latest
+  - name: airbyte/webapp
+    newTag: 0.26.4-alpha
   - name: temporalio/auto-setup
     newTag: 1.7.0
 
