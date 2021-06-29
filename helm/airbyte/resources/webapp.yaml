@@ -65,23 +65,23 @@ spec:
                   key: INTERNAL_API_HOST
           ports:
             - containerPort: 80
-        volumeMounts:
-        # - mountPath: /etc/nginx/nginx.conf
-        #   name: nginx-conf
-        #   subPath: nginx.conf
-        - mountPath: /etc/nginx/conf.d/default.conf
-          name: domain-conf
-          subPath: default.conf
-      volumes:
-        # - name: nginx-conf
-        #   configMap:
-        #     name: nginx-conf
-        #     items:
-        #       - key: nginx.default
-        #         path: nginx.conf
-        - name: domain-conf
-          configMap:
+          volumeMounts:
+          # - mountPath: /etc/nginx/nginx.conf
+          #   name: nginx-conf
+          #   subPath: nginx.conf
+          - mountPath: /etc/nginx/conf.d/default.conf
             name: domain-conf
-            items:
-              - key: default.conf
-                path: default.conf
+            subPath: default.conf
+        volumes:
+          # - name: nginx-conf
+          #   configMap:
+          #     name: nginx-conf
+          #     items:
+          #       - key: nginx.default
+          #         path: nginx.conf
+          - name: domain-conf
+            configMap:
+              name: domain-conf
+              items:
+                - key: default.conf
+                  path: default.conf
