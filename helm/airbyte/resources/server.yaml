@@ -34,9 +34,11 @@ spec:
                     values:
                       - scheduler
               topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+      - name: regcred
       containers:
         - name: airbyte-server-container
-          image: airbyte/server
+          image: blotout/airbyte-server
           env:
             - name: AIRBYTE_VERSION
               valueFrom:

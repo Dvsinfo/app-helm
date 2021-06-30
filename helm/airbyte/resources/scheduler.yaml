@@ -14,9 +14,11 @@ spec:
     spec:
       serviceAccountName: airbyte-admin
       automountServiceAccountToken: true
+      imagePullSecrets:
+      - name: regcred
       containers:
         - name: airbyte-scheduler-container
-          image: airbyte/scheduler
+          image: blotout/airbyte-scheduler
           env:
             - name: AIRBYTE_VERSION
               valueFrom:
@@ -149,7 +151,7 @@ spec:
               mountPath: /workspace
       initContainers:
         - name: airbyte-seed
-          image: airbyte/seed
+          image: blotout/airbyte-seed
           command: ["/bin/sh"]
           args:
             [

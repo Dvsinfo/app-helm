@@ -24,9 +24,11 @@ spec:
       labels:
         airbyte: db
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
         - name: airbyte-db-container
-          image: airbyte/db
+          image: blotout/airbyte-db
           env:
             - name: POSTGRES_DB
               value: db-airbyte

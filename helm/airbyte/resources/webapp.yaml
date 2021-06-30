@@ -24,9 +24,11 @@ spec:
       labels:
         airbyte: webapp
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
         - name: airbyte-webapp-container
-          image: blotout/test-123
+          image: blotout/airbyte-webapp
           env:
             - name: AIRBYTE_VERSION
               valueFrom:

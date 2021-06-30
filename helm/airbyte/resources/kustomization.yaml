@@ -14,16 +14,16 @@ resources:
   - temporal.yaml
 
 images:
-  - name: airbyte/seed
-    newTag: 0.26.4-alpha
-  - name: airbyte/db
-    newTag: 0.26.4-alpha
-  - name: airbyte/scheduler
-    newTag: 0.26.4-alpha
-  - name: airbyte/server
-    newTag: 0.26.4-alpha
-  - name: blotout/test-123
-    newTag: latest
+  - name: blotout/airbyte-seed
+    newTag: connector_ci-c513bf7cd45838e33a3beb482fffa90b1e5f26af
+  - name: blotout/airbyte-db
+    newTag: connector_ci-c513bf7cd45838e33a3beb482fffa90b1e5f26af
+  - name: blotout/airbyte-scheduler
+    newTag: connector_ci-c513bf7cd45838e33a3beb482fffa90b1e5f26af
+  - name: blotout/airbyte-server
+    newTag: connector_ci-c513bf7cd45838e33a3beb482fffa90b1e5f26af
+  - name: blotout/airbyte-webapp
+    newTag: connector_ci-c513bf7cd45838e33a3beb482fffa90b1e5f26af
   - name: temporalio/auto-setup
     newTag: 1.7.0
 
