@@ -116,6 +116,16 @@ spec:
                 configMapKeyRef:
                   name: airbyte-env
                   key: AWS_SECRET_ACCESS_KEY
+            - name: BLOTOUT_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: BLOTOUT_BASE_URL
+            - name: BLOTOUT_AUTH_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: BLOTOUT_AUTH_ENDPOINT
           ports:
             - containerPort: 8001
           volumeMounts:
