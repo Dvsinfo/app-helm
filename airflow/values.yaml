@@ -60,7 +60,11 @@ extraDeploy: []
 ## - name: AIRFLOW__SMTP__USER
 ##   value: ""
 ##
-extraEnvVars: []
+extraEnvVars:
+  - key: "var_1"
+    value: "my_value_1"
+  - key: "var_2"
+    value: "my_value_2"
 ## @param extraEnvVarsCM ConfigMap containing extra env vars to add to web, worker and scheduler pods
 ##
 extraEnvVarsCM:
