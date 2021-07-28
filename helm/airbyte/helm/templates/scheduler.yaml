@@ -149,26 +149,26 @@ spec:
                 configMapKeyRef:
                   name: airbyte-env
                   key: AWS_SECRET_ACCESS_KEY
-            - name: S3_MINIO_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: S3_MINIO_ENDPOINT
-            - name: S3_PATH_STYLE_ACCESS
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: S3_PATH_STYLE_ACCESS
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: GOOGLE_APPLICATION_CREDENTIALS
-            - name: GCP_STORAGE_BUCKET
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: GCP_STORAGE_BUCKET
+            # - name: S3_MINIO_ENDPOINT
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: airbyte-env
+            #       key: S3_MINIO_ENDPOINT
+            # - name: S3_PATH_STYLE_ACCESS
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: airbyte-env
+            #       key: S3_PATH_STYLE_ACCESS
+            # - name: GOOGLE_APPLICATION_CREDENTIALS
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: airbyte-env
+            #       key: GOOGLE_APPLICATION_CREDENTIALS
+            # - name: GCP_STORAGE_BUCKET
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: airbyte-env
+            #       key: GCP_STORAGE_BUCKET
           ports:
             - containerPort: 9000 # for heartbeat server
             - containerPort: 9001 # start temporal worker port pool
