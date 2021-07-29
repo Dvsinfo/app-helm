@@ -208,7 +208,7 @@ spec:
               readOnly: true
       initContainers:
         - name: postgres-init
-          image: blotout/postgresql-client:0.28.1
+          image: blotout/postgresql-client:0.28.0
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: PGPASSWORD
