@@ -149,16 +149,16 @@ spec:
                 configMapKeyRef:
                   name: airbyte-env
                   key: AWS_SECRET_ACCESS_KEY
-            # - name: S3_MINIO_ENDPOINT
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: airbyte-env
-            #       key: S3_MINIO_ENDPOINT
-            # - name: S3_PATH_STYLE_ACCESS
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: airbyte-env
-            #       key: S3_PATH_STYLE_ACCESS
+            - name: S3_MINIO_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: S3_MINIO_ENDPOINT
+            - name: S3_PATH_STYLE_ACCESS
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: S3_PATH_STYLE_ACCESS
             # - name: GOOGLE_APPLICATION_CREDENTIALS
             #   valueFrom:
             #     configMapKeyRef:
