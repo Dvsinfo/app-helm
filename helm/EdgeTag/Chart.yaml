@@ -1,0 +1,10 @@
+apiVersion: v1
+appVersion: 0.0.1
+description: A Helm chart for EdgdTag Backend App, a declarative, GitOps continuous delivery helm chart for Kubernetes.
+keywords:
+- edgetag-backend
+maintainers:
+- name: satish
+- name: ojasvi
+name: app
+version: 0.0.1
