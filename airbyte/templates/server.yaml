@@ -55,11 +55,11 @@ spec:
                 configMapKeyRef:
                   name: airbyte-env
                   key: WORKER_POD_NODE_SELECTORS
-            - name: JOBS_IMAGE_PULL_SECRET
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: JOBS_IMAGE_PULL_SECRET
+            # - name: JOBS_IMAGE_PULL_SECRET
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: airbyte-env
+            #       key: JOBS_IMAGE_PULL_SECRET
             - name: CONFIG_ROOT
               valueFrom:
                 configMapKeyRef:
