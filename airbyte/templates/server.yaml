@@ -45,6 +45,11 @@ spec:
                 configMapKeyRef:
                   name: airbyte-env
                   key: RUN_DATABASE_MIGRATION_ON_STARTUP
+            - name: VERSION_0_32_0_FORCE_UPGRADE
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: VERSION_0_32_0_FORCE_UPGRADE
             - name: WORKER_POD_TOLERATIONS
               valueFrom:
                 configMapKeyRef:
