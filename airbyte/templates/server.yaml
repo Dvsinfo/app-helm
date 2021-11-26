@@ -45,6 +45,21 @@ spec:
                 configMapKeyRef:
                   name: airbyte-env
                   key: RUN_DATABASE_MIGRATION_ON_STARTUP
+            - name: WORKER_POD_TOLERATIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: WORKER_POD_TOLERATIONS
+            - name: WORKER_POD_NODE_SELECTORS
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: WORKER_POD_NODE_SELECTORS
+            - name: JOBS_IMAGE_PULL_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: JOBS_IMAGE_PULL_SECRET
             - name: CONFIG_ROOT
               valueFrom:
                 configMapKeyRef:

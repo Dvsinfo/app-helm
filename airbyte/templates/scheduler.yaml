@@ -174,27 +174,27 @@ spec:
                 configMapKeyRef:
                   name: airbyte-env
                   key: INTERNAL_API_HOST
-      initContainers:
-        - name: postgres-init
-          image: blotout/postgresql-client:0.28.0
-          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
-          env:
-            - name: PGPASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_PASSWORD
-            - name: DATABASE_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_HOST
-            - name: DATABASE_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: airbyte-env
-                  key: DATABASE_USER
-          command: ['sh', "/run.sh"]
+      # initContainers:
+      #   - name: postgres-init
+      #     image: blotout/postgresql-client:0.28.0
+      #     imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+      #     env:
+      #       - name: PGPASSWORD
+      #         valueFrom:
+      #           configMapKeyRef:
+      #             name: airbyte-env
+      #             key: DATABASE_PASSWORD
+      #       - name: DATABASE_HOST
+      #         valueFrom:
+      #           configMapKeyRef:
+      #             name: airbyte-env
+      #             key: DATABASE_HOST
+      #       - name: DATABASE_USER
+      #         valueFrom:
+      #           configMapKeyRef:
+      #             name: airbyte-env
+      #             key: DATABASE_USER
+      #     command: ['sh', "/run.sh"]
           volumeMounts:
             - name: gcs-log-creds-volume
               mountPath: /secrets/gcs-log-creds
