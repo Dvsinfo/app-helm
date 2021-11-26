@@ -28,6 +28,11 @@ spec:
                 configMapKeyRef:
                   name: airbyte-env
                   key: AIRBYTE_VERSION
+            - name: RUN_DATABASE_MIGRATION_ON_STARTUP
+              valueFrom:
+                configMapKeyRef:
+                  name: airbyte-env
+                  key: RUN_DATABASE_MIGRATION_ON_STARTUP
             - name: CONFIG_ROOT
               valueFrom:
                 configMapKeyRef:
