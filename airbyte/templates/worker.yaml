@@ -12,6 +12,10 @@ spec:
       labels:
         airbyte: worker
     spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: airbyte-admin
       automountServiceAccountToken: true
       containers:
