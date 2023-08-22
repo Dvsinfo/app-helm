@@ -1,15 +1,30 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "edgetag-shopify.fullname" . }}
+{{- if .Values.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+  name: {{ template "app.fullname" . }}
   labels:
-    {{- include "edgetag-shopify.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "app.name" . }}-{{ .Release.Name }}
+    helm.sh/chart: {{ include "app.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: application
+    app.kubernetes.io/component: {{ .Release.Name }}
+{{- if .Values.service.labels }}
+{{- toYaml .Values.service.labels | nindent 4 }}
+{{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+  - name: {{ .Release.Name }}
+    protocol: TCP
+    port: {{ .Values.service.containerPort }}
+    targetPort: {{ .Values.service.containerPort }}
   selector:
-    {{- include "edgetag-shopify.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "app.name" . }}-{{ .Release.Name }}
