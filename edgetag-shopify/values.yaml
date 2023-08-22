@@ -30,21 +30,6 @@ resources: {}
 #    cpu: 250m
 #    memory: 100Mi
 
-# readinessProbe:
-#   path: 
-#   failureThreshold: 3
-#   initialDelaySeconds: 5
-#   periodSeconds: 10
-#   successThreshold: 1
-#   timeoutSeconds: 5
-# livenessProbe:
-#   path: 
-#   failureThreshold: 4
-#   initialDelaySeconds: 15
-#   periodSeconds: 10
-#   successThreshold: 1
-#   timeoutSeconds: 5
-
 service:
   type: ClusterIP
   containerPort: 3000
